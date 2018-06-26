@@ -234,11 +234,14 @@ class SocialLogin(object):
         assert not self.is_existing
         user = self.user
         user.save()
+
         self.account.user = user
         self.account.save()
+
         if app_settings.STORE_TOKENS and self.token:
             self.token.account = self.account
             self.token.save()
+
         if connect:
             # TODO: Add any new email addresses automatically?
             pass
@@ -262,9 +265,11 @@ class SocialLogin(object):
                                           uid=self.account.uid)
             # Update account
             a.extra_data = self.account.extra_data
+            a.save()
+
             self.account = a
             self.user = self.account.user
-            a.save()
+
             # Update token
             if app_settings.STORE_TOKENS and self.token:
                 assert not self.token.pk
